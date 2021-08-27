@@ -1,9 +1,8 @@
-import { Project } from "./db/config";
-import lms = require("./lms/powerbiProvider");
+import provider = require("./lms/powerbiProvider");
 
-const App = async (project: any) => {
+export const App = async (project: any) => {
 	try {
-		await lms.sendLMS(project);
+		await provider.sendLMS(project);
 
 		setTimeout(App, 10000, project);
 	} catch (e) {
@@ -12,7 +11,3 @@ const App = async (project: any) => {
 		console.log("------------");
 	}
 };
-
-for (const project of Project.projects) {
-	App(project);
-}

@@ -1,4 +1,4 @@
-export const Project = {
+export = {
 	projects: [
 		{
 			name: "CONEX",
