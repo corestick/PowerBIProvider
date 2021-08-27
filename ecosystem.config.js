@@ -1,13 +1,9 @@
 module.exports = {
 	apps: [
 		{
-			script: "index.js",
+			script: "./dist/index.js",
 			watch: ".",
-		},
-		{
-			script: "./service-worker/",
-			watch: ["./service-worker"],
-		},
+		}
 	],
 
 	deploy: {

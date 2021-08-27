@@ -2,8 +2,8 @@ export = {
 	projects: [
 		{
 			name: "CONEX",
-			server: "183.111.185.85",
-			port: 2345,
+			server: "192.168.1.85",
+			port: null,
 			user: "ElumiDev",
 			password: "#2Lumi$2%7",
 			database: "CONEX",
@@ -11,7 +11,7 @@ export = {
 		},
 		{
 			name: "HOS",
-			server: "db.hiteco.co.kr",
+			server: "192.168.1.81",
 			port: 2345,
 			user: "one_user",
 			password: "one123*$",
