@@ -9,14 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const lms = require("./lms/lms");
+const lms = require("./lms/powerbiProvider");
 const prjNames = ["CONEX", "HOS"];
-const App = () => __awaiter(void 0, void 0, void 0, function* () {
+const App = (prjName) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        for (const prjName of prjNames) {
-            yield lms.sendLMS(prjName);
-        }
-        setTimeout(App, 5000);
+        yield lms.sendLMS(prjName);
+        setTimeout(App, 10000, prjName);
     }
     catch (e) {
         console.log(e.message);
@@ -25,5 +23,7 @@ const App = () => __awaiter(void 0, void 0, void 0, function* () {
         console.log("------------");
     }
 });
-App();
+for (const prjName of prjNames) {
+    App(prjName);
+}
 //# sourceMappingURL=App.js.map

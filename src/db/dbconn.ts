@@ -1,3 +1,5 @@
+const sql = require("mssql");
+
 class DBConn {
 	server: string;
 	port: number;
@@ -36,9 +38,11 @@ export const getApiInfoQuery = (prjName: string): string => {
 			return "";
 	}
 };
-export const getDBConn = (prjName: string) => {
+
+const getDBConn = (prjName: string): DBConn => {
 	switch (prjName) {
 		case "CONEX":
+		default:
 			return new DBConn(
 				"183.111.185.85",
 				2345,
@@ -54,5 +58,36 @@ export const getDBConn = (prjName: string) => {
 				"one123*$",
 				"EIP_ONE"
 			);
+	}
+};
+
+export const getPoolPromise = (prjName: string): any => {
+	const conn = getDBConn(prjName);
+
+	const poolPromise = new sql.ConnectionPool(conn)
+		.connect()
+		.then((pool: any) => {
+			console.log("Connected to " + prjName);
+			return pool;
+		})
+		.catch((err: any) =>
+			console.log(prjName + " Connection Failed : ", err)
+		);
+
+	return poolPromise;
+};
+
+export const getRowData = async (pool: any, record: any) => {
+	try {
+		const res = await pool
+			.request()
+			.input("MasterSite", sql.VarChar(10), record.MasterSite)
+			.input("SiteGroup", sql.VarChar(10), record.SiteGroup)
+			.execute(record.ProcedureName);
+
+		return res.recordset;
+	} catch (e) {
+		console.log(e);
+		return e;
 	}
 };

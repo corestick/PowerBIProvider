@@ -1,14 +1,12 @@
-import lms = require("./lms/lms");
+import lms = require("./lms/powerbiProvider");
 
 const prjNames = ["CONEX", "HOS"];
 
-const App = async () => {
+const App = async (prjName: string) => {
 	try {
-		for (const prjName of prjNames) {
-			await lms.sendLMS(prjName);
-		}
+		await lms.sendLMS(prjName);
 
-		setTimeout(App, 5000);
+		setTimeout(App, 10000, prjName);
 	} catch (e) {
 		console.log(e.message);
 	} finally {
@@ -16,4 +14,6 @@ const App = async () => {
 	}
 };
 
-App();
+for (const prjName of prjNames) {
+	App(prjName);
+}

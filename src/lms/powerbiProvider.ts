@@ -1,12 +1,11 @@
 import axios from "axios";
-let sql = require("mssql");
-let dbConfig = require("../db/dbconn");
+const dbConfig = require("../db/dbconn");
 
 export const sendLMS = async (prjName: string) => {
 	try {
-		await sql.close();
+		console.log(prjName + " : START ----->");
 
-		let pool = await sql.connect(dbConfig.getDBConn(prjName));
+		let pool = await dbConfig.getPoolPromise(prjName);
 		let result = await pool
 			.request()
 			.query(dbConfig.getApiInfoQuery(prjName));
@@ -23,7 +22,8 @@ export const sendLMS = async (prjName: string) => {
 		await Promise.all(proms).then((values) => {});
 	} catch (e) {
 		console.log(e);
-		await sql.close();
+	} finally {
+		console.log(prjName + " : <----- END");
 	}
 };
 
@@ -31,26 +31,11 @@ const postPowerBIApi = async (pool: any, record: any) => {
 	try {
 		console.log("start", record.MasterSite, record.ProcedureName);
 
-		let data = await getRowData(pool, record);
+		let data = await dbConfig.getRowData(pool, record);
 		await axios.post(record.PowerBIApiUrl, data, {
 			headers: { "Content-Type": "application/json" },
 		});
 
 		console.log("end", record.MasterSite, record.ProcedureName);
 	} catch (error) {}
-};
-
-const getRowData = async (pool: any, record: any) => {
-	try {
-		const res = await pool
-			.request()
-			.input("MasterSite", sql.VarChar(10), record.MasterSite)
-			.input("SiteGroup", sql.VarChar(10), record.SiteGroup)
-			.execute(record.ProcedureName);
-
-		return res.recordset;
-	} catch (e) {
-		console.log(e);
-		return e;
-	}
 };
