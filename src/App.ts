@@ -1,12 +1,11 @@
+import { Project } from "./db/config";
 import lms = require("./lms/powerbiProvider");
 
-const prjNames = ["CONEX", "HOS"];
-
-const App = async (prjName: string) => {
+const App = async (project: any) => {
 	try {
-		await lms.sendLMS(prjName);
+		await lms.sendLMS(project);
 
-		setTimeout(App, 10000, prjName);
+		setTimeout(App, 10000, project);
 	} catch (e) {
 		console.log(e.message);
 	} finally {
@@ -14,6 +13,6 @@ const App = async (prjName: string) => {
 	}
 };
 
-for (const prjName of prjNames) {
-	App(prjName);
+for (const project of Project.projects) {
+	App(project);
 }

@@ -1,14 +1,12 @@
 import axios from "axios";
 const dbConfig = require("../db/dbconn");
 
-export const sendLMS = async (prjName: string) => {
+export const sendLMS = async (project: any) => {
 	try {
-		console.log(prjName + " : START ----->");
+		console.log(project.name + " : START ----->");
 
-		let pool = await dbConfig.getPoolPromise(prjName);
-		let result = await pool
-			.request()
-			.query(dbConfig.getApiInfoQuery(prjName));
+		let pool = await dbConfig.getPoolPromise(project);
+		let result = await pool.request().query(project.query);
 
 		const proms = new Array();
 		for (const record of result.recordset) {
@@ -23,7 +21,7 @@ export const sendLMS = async (prjName: string) => {
 	} catch (e) {
 		console.log(e);
 	} finally {
-		console.log(prjName + " : <----- END");
+		console.log(project.name + " : <----- END");
 	}
 };
 

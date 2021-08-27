@@ -12,13 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendLMS = void 0;
 const axios_1 = require("axios");
 const dbConfig = require("../db/dbconn");
-const sendLMS = (prjName) => __awaiter(void 0, void 0, void 0, function* () {
+const sendLMS = (project) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(prjName + " : START ----->");
-        let pool = yield dbConfig.getPoolPromise(prjName);
-        let result = yield pool
-            .request()
-            .query(dbConfig.getApiInfoQuery(prjName));
+        console.log(project.name + " : START ----->");
+        let pool = yield dbConfig.getPoolPromise(project);
+        let result = yield pool.request().query(project.query);
         const proms = new Array();
         for (const record of result.recordset) {
             const prom = new Promise((resolve, reject) => {
@@ -32,7 +30,7 @@ const sendLMS = (prjName) => __awaiter(void 0, void 0, void 0, function* () {
         console.log(e);
     }
     finally {
-        console.log(prjName + " : <----- END");
+        console.log(project.name + " : <----- END");
     }
 });
 exports.sendLMS = sendLMS;

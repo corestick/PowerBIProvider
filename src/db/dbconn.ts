@@ -28,50 +28,27 @@ class DBConn {
 	}
 }
 
-export const getApiInfoQuery = (prjName: string): string => {
-	switch (prjName) {
-		case "CONEX":
-			return "Select * From CONEX_MASTER.dbo.PowerBIApi (NOLOCK)";
-		case "HOS":
-			return "Select * From HOS_MASTER.dbo.PowerBIApi (NOLOCK)";
-		default:
-			return "";
-	}
+const getDBConn = (project: any): DBConn => {
+	return new DBConn(
+		project.server,
+		project.port,
+		project.user,
+		project.password,
+		project.database
+	);
 };
 
-const getDBConn = (prjName: string): DBConn => {
-	switch (prjName) {
-		case "CONEX":
-		default:
-			return new DBConn(
-				"183.111.185.85",
-				2345,
-				"ElumiDev",
-				"#2Lumi$2%7",
-				"CONEX"
-			);
-		case "HOS":
-			return new DBConn(
-				"db.hiteco.co.kr",
-				2345,
-				"one_user",
-				"one123*$",
-				"EIP_ONE"
-			);
-	}
-};
-
-export const getPoolPromise = (prjName: string): any => {
-	const conn = getDBConn(prjName);
+export const getPoolPromise = (project: any): any => {
+	const conn = getDBConn(project);
 
 	const poolPromise = new sql.ConnectionPool(conn)
 		.connect()
 		.then((pool: any) => {
-			console.log("Connected to " + prjName);
+			console.log("Connected to " + project.name);
 			return pool;
 		})
 		.catch((err: any) =>
-			console.log(prjName + " Connection Failed : ", err)
+			console.log(project.name + " Connection Failed : ", err)
 		);
 
 	return poolPromise;

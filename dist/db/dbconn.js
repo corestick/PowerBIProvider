@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRowData = exports.getPoolPromise = exports.getApiInfoQuery = void 0;
+exports.getRowData = exports.getPoolPromise = void 0;
 const sql = require("mssql");
 class DBConn {
     constructor(server, port, user, password, database) {
@@ -24,35 +24,18 @@ class DBConn {
         };
     }
 }
-const getApiInfoQuery = (prjName) => {
-    switch (prjName) {
-        case "CONEX":
-            return "Select * From CONEX_MASTER.dbo.PowerBIApi (NOLOCK)";
-        case "HOS":
-            return "Select * From HOS_MASTER.dbo.PowerBIApi (NOLOCK)";
-        default:
-            return "";
-    }
+const getDBConn = (project) => {
+    return new DBConn(project.server, project.port, project.user, project.password, project.database);
 };
-exports.getApiInfoQuery = getApiInfoQuery;
-const getDBConn = (prjName) => {
-    switch (prjName) {
-        case "CONEX":
-        default:
-            return new DBConn("183.111.185.85", 2345, "ElumiDev", "#2Lumi$2%7", "CONEX");
-        case "HOS":
-            return new DBConn("db.hiteco.co.kr", 2345, "one_user", "one123*$", "EIP_ONE");
-    }
-};
-const getPoolPromise = (prjName) => {
-    const conn = getDBConn(prjName);
+const getPoolPromise = (project) => {
+    const conn = getDBConn(project);
     const poolPromise = new sql.ConnectionPool(conn)
         .connect()
         .then((pool) => {
-        console.log("Connected to " + prjName);
+        console.log("Connected to " + project.name);
         return pool;
     })
-        .catch((err) => console.log(prjName + " Connection Failed : ", err));
+        .catch((err) => console.log(project.name + " Connection Failed : ", err));
     return poolPromise;
 };
 exports.getPoolPromise = getPoolPromise;
